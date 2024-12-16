@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod test {
     use log::LevelFilter;
-    use fast_log::{Config, FastLogFormat};
-    use fast_log::appender::{Command, FastLogRecord, LogAppender};
-    use fast_log::filter::ModuleFilter;
+    use fastlog::{Config, FastLogFormat};
+    use fastlog::appender::{Command, FastLogRecord, LogAppender};
+    use fastlog::filter::ModuleFilter;
 
     #[test]
     fn test_send_pack() {
@@ -19,7 +19,7 @@ mod test {
                 }
             }
         }
-        fast_log::init(Config::new()
+        fastlog::init(Config::new()
             .format(FastLogFormat::new().set_display_line_level(LevelFilter::Trace))
             .add_filter(m)
             .add_appender(A{})

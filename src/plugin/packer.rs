@@ -21,7 +21,7 @@ use zip::result::ZipResult;
 #[cfg(feature = "zip")]
 use zip::write::FileOptions;
 
-/// you need enable fast_log = { ... ,features=["zip"]}
+/// you need enable fastlog = { ... ,features=["zip"]}
 /// the zip compress
 #[cfg(feature = "zip")]
 pub struct ZipPacker {}
@@ -40,7 +40,7 @@ impl Packer for ZipPacker {
         }
         let zip_path = log_file_path.replace(".log", ".zip");
         let zip_file = File::create(&zip_path)
-            .map_err(|e| LogError::from(format!("[fast_log] create(&{}) fail:{}", zip_path, e)))?;
+            .map_err(|e| LogError::from(format!("[fastlog] create(&{}) fail:{}", zip_path, e)))?;
         //write zip bytes data
         let mut zip = zip::ZipWriter::new(zip_file);
         zip.start_file::<String, ()>(log_name, FileOptions::default())
@@ -50,9 +50,9 @@ impl Packer for ZipPacker {
         zip.flush().map_err(|e| LogError::from(e.to_string()))?;
         let finish: ZipResult<File> = zip.finish();
         if finish.is_err() {
-            //println!("[fast_log] try zip fail{:?}", finish.err());
+            //println!("[fastlog] try zip fail{:?}", finish.err());
             return Err(LogError::from(format!(
-                "[fast_log] try zip fail{:?}",
+                "[fastlog] try zip fail{:?}",
                 finish.err()
             )));
         }
@@ -60,7 +60,7 @@ impl Packer for ZipPacker {
     }
 }
 
-/// you need enable fast_log = { ... ,features=["lz4"]}
+/// you need enable fastlog = { ... ,features=["lz4"]}
 #[cfg(feature = "lz4")]
 use lz4_flex::frame::FrameEncoder;
 
@@ -77,7 +77,7 @@ impl Packer for LZ4Packer {
     fn do_pack(&self, mut log_file: File, log_file_path: &str) -> Result<bool, LogError> {
         let lz4_path = log_file_path.replace(".log", ".lz4");
         let lz4_file = File::create(&lz4_path)
-            .map_err(|e| LogError::from(format!("[fast_log] create(&{}) fail:{}", lz4_path, e)))?;
+            .map_err(|e| LogError::from(format!("[fastlog] create(&{}) fail:{}", lz4_path, e)))?;
         //write lz4 bytes data
         let mut encoder = FrameEncoder::new(lz4_file);
         //buf reader
@@ -85,7 +85,7 @@ impl Packer for LZ4Packer {
         let result = encoder.finish();
         if result.is_err() {
             return Err(LogError::from(format!(
-                "[fast_log] try zip fail{:?}",
+                "[fastlog] try zip fail{:?}",
                 result.err()
             )));
         }
@@ -111,7 +111,7 @@ impl Packer for GZipPacker {
         use std::io::Write;
         let zip_path = log_file_path.replace(".log", ".gz");
         let zip_file = File::create(&zip_path)
-            .map_err(|e| LogError::from(format!("[fast_log] create(&{}) fail:{}", zip_path, e)))?;
+            .map_err(|e| LogError::from(format!("[fastlog] create(&{}) fail:{}", zip_path, e)))?;
         //write zip bytes data
         let mut zip = GzEncoder::new(zip_file, Compression::default());
         std::io::copy(&mut log_file, &mut zip).map_err(|e| LogError::from(e.to_string()))?;
@@ -119,7 +119,7 @@ impl Packer for GZipPacker {
         let finish = zip.finish();
         if finish.is_err() {
             return Err(LogError::from(format!(
-                "[fast_log] try zip fail{:?}",
+                "[fastlog] try zip fail{:?}",
                 finish.err()
             )));
         }

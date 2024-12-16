@@ -9,11 +9,11 @@ pub trait Filter: Send + Sync {
 /// an Module Filter
 /// ```rust
 /// fn main(){
-///    use fast_log::Config;
-///    use fast_log::filter::ModuleFilter;
+///    use fastlog::Config;
+///    use fastlog::filter::ModuleFilter;
 ///    let filter = ModuleFilter::new();
 ///    filter.modules.push(module_path!().to_string());
-///    fast_log::init(Config::new().console().add_filter(filter)).unwrap();
+///    fastlog::init(Config::new().console().add_filter(filter)).unwrap();
 /// }
 /// ```
 pub struct ModuleFilter {
