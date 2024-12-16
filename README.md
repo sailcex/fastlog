@@ -1,3 +1,5 @@
+[![Rust](https://github.com/helicex-rs/fastlog/actions/workflows/rust.yml/badge.svg)](https://github.com/helicex-rs/fastlog/actions/workflows/rust.yml)
+
 # fastlog
 
 A log implementation for extreme speed, using Crossbeam/channel ,once Batch write logs,fast log date, Appender
