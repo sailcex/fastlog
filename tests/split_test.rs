@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod test {
-    use fast_log::appender::{Command, FastLogRecord, LogAppender};
-    use fast_log::consts::LogSize;
-    use fast_log::plugin::file_name::FileName;
-    use fast_log::plugin::file_split::{FileSplitAppender, RollingType, Keep, RawFile, Rolling, KeepType};
-    use fast_log::plugin::packer::LogPacker;
+    use fastlog::appender::{Command, FastLogRecord, LogAppender};
+    use fastlog::consts::LogSize;
+    use fastlog::plugin::file_name::FileName;
+    use fastlog::plugin::file_split::{FileSplitAppender, RollingType, Keep, RawFile, Rolling, KeepType};
+    use fastlog::plugin::packer::LogPacker;
     use fastdate::DateTime;
     use log::Level;
     use std::fs::remove_dir_all;

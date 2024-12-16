@@ -13,12 +13,12 @@ use log::LevelFilter;
 use parking_lot::Mutex;
 use std::fmt::{Debug, Formatter};
 
-/// the fast_log Config
+/// the fastlog Config
 /// for example:
 /// ```rust
-/// use fast_log::Config;
+/// use fastlog::Config;
 /// fn main(){
-///    fast_log::init(Config::new().console().chan_len(Some(1000000))).unwrap();
+///    fastlog::init(Config::new().console().chan_len(Some(1000000))).unwrap();
 /// }
 /// ```
 pub struct Config {
@@ -29,7 +29,7 @@ pub struct Config {
     pub level: LevelFilter,
     /// filter log
     pub filters: SyncVec<Box<dyn Filter>>,
-    /// format record into field fast_log_record's formatted:String
+    /// format record into field fastlog_record's formatted:String
     pub format: Box<dyn RecordFormat>,
     /// the channel length,default None(Unbounded channel)
     pub chan_len: Option<usize>,
@@ -131,12 +131,12 @@ impl Config {
     /// .split::<FileType, Packer>()
     /// for example:
     /// ```rust
-    /// use fast_log::Config;
-    /// use fast_log::consts::LogSize;
-    /// use fast_log::plugin::file_split::{Rolling, RawFile, RollingType, KeepType};
-    /// use fast_log::plugin::packer::LogPacker;
+    /// use fastlog::Config;
+    /// use fastlog::consts::LogSize;
+    /// use fastlog::plugin::file_split::{Rolling, RawFile, RollingType, KeepType};
+    /// use fastlog::plugin::packer::LogPacker;
     /// fn new(){
-    ///  fast_log::init(
+    ///  fastlog::init(
     ///         Config::new()
     ///             .chan_len(Some(100000))
     ///             .split::<RawFile, _, _, _>(

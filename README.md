@@ -1,9 +1,4 @@
-# fast_log
-
-![Build Status](https://api.travis-ci.com/rbatis/fast_log.svg?branch=master)
-[![GitHub release](https://img.shields.io/github/v/release/rbatis/fast_log)](https://github.com/rbatis/fast_log/releases)
-
-<img style="width: 200px;height: 200px;" width="200" height="200" src="https://github.com/rbatis/rbatis/blob/master/logo.png?raw=true" />
+# fastlog
 
 A log implementation for extreme speed, using Crossbeam/channel ,once Batch write logs,fast log date, Appender
 architecture, appender per thread
@@ -21,53 +16,43 @@ architecture, appender per thread
 log data->    | main channel(crossbeam)  |   ->          
               ----------------- 
                                         ----------------                                    ----------------------
-                                  ->    |thread channel)|  -> background thread  |    appender1  |
+                                  ->    |thread channel|  -> background thread  |    appender1  |
                                         ----------------                                    ----------------------
 
                                         ----------------                                    ----------------------
-                                  ->    |thread channel)|  -> background thread  |    appender2  |
+                                  ->    |thread channel|  -> background thread  |    appender2  |
                                         ----------------                                    ----------------------
-
-                                        ----------------                                    ----------------------
-                                  ->    |thread channel)|  -> background thread  |    appender3  |
-                                        ----------------                                    ----------------------
-
-                                        ----------------                                    ----------------------
-                                  ->    |thread channel)|  -> background thread  |    appender4  |
-                                        ----------------                                    ----------------------
-
-
 ```
 
 * How fast is?
 
 * no flush(chan_len=1000000) benches/log.rs
 
-```
-//MACOS(Apple M1MAX-32GB)
-test bench_log ... bench:          85 ns/iter (+/- 1,800)
-```
-
-* all log flush into file(chan_len=1000000) example/bench_test_file.rs
+```bash
+$ cargo bench --bench log
 
 ```
-//MACOS(Apple M1MAX-32GB)
-test bench_log ... bench:          323 ns/iter (+/- 0)
+
+* all log flush into file(chan_len=1000000) benches/log_file.rs
+
+```bash
+$ cargo bench --bench log_file
+
 ```
 
 * how to use?
 
 ```toml
-log = "0.4"
-fast_log = { version = "1.7" }
+log = "~0.4"
+fastlog = { git = "https://github.com/helicex-rs/fastlog.git", tag = "v1.7.6" }
 ```
 
 or enable zip/lz4/gzip Compression library
 
 ```toml
-log = "0.4"
+log = "~0.4"
 # "lz4","zip","gzip"
-fast_log = { version = "1.7", features = ["lz4", "zip", "gzip"] }
+fastlog = { git = "https://github.com/helicex-rs/fastlog.git", tag = "v1.7.6", features = ["lz4", "zip", "gzip"] }
 ```
 
 #### Performance optimization(important)
@@ -77,7 +62,7 @@ fast_log = { version = "1.7", features = ["lz4", "zip", "gzip"] }
 ```rust
 use log::{error, info, warn};
 fn main() {
-    fast_log::init(Config::new().file("target/test.log").chan_len(Some(100000))).unwrap();
+    fastlog::init(Config::new().file("target/test.log").chan_len(Some(100000))).unwrap();
     log::info!("Commencing yak shaving{}", 0);
 }
 ```
@@ -87,7 +72,7 @@ fn main() {
 ```rust
 use log::{error, info, warn};
 fn main() {
-    fast_log::init(Config::new().console().chan_len(Some(100000))).unwrap();
+    fastlog::init(Config::new().console().chan_len(Some(100000))).unwrap();
     log::info!("Commencing yak shaving{}", 0);
 }
 ```
@@ -97,18 +82,18 @@ fn main() {
 ```rust
 use log::{error, info, warn};
 fn main() {
-    fast_log::init(Config::new().console().chan_len(Some(100000))).unwrap();
-    fast_log::print("Commencing print\n".into());
+    fastlog::init(Config::new().console().chan_len(Some(100000))).unwrap();
+    fastlog::print("Commencing print\n".into());
 }
 ```
 
 #### Use Log(File)
 
 ```rust
-use fast_log::{init_log};
+use fastlog::{init_log};
 use log::{error, info, warn};
 fn main() {
-    fast_log::init(Config::new().file("target/test.log").chan_len(Some(100000))).unwrap();
+    fastlog::init(Config::new().file("target/test.log").chan_len(Some(100000))).unwrap();
     log::info!("Commencing yak shaving{}", 0);
     info!("Commencing yak shaving");
 }
@@ -117,13 +102,13 @@ fn main() {
 #### Split Log(ByLogDate)
 
 ```rust
-use fast_log::config::Config;
-use fast_log::plugin::file_split::{RollingType, KeepType, DateType, Rolling};
+use fastlog::config::Config;
+use fastlog::plugin::file_split::{RollingType, KeepType, DateType, Rolling};
 use std::thread::sleep;
 use std::time::Duration;
-use fast_log::plugin::packer::LogPacker;
+use fastlog::plugin::packer::LogPacker;
 fn main() {
-    fast_log::init(Config::new().chan_len(Some(100000)).console().file_split(
+    fastlog::init(Config::new().chan_len(Some(100000)).console().file_split(
         "target/logs/",
         Rolling::new(RollingType::ByDate(DateType::Day)),
         KeepType::KeepNum(2),
@@ -143,12 +128,12 @@ fn main() {
 #### Split Log(ByLogSize)
 
 ```rust
-use fast_log::config::Config;
-use fast_log::consts::LogSize;
-use fast_log::plugin::file_split::{RollingType, KeepType, Rolling};
-use fast_log::plugin::packer::LogPacker;
+use fastlog::config::Config;
+use fastlog::consts::LogSize;
+use fastlog::plugin::file_split::{RollingType, KeepType, Rolling};
+use fastlog::plugin::packer::LogPacker;
 fn main() {
-    fast_log::init(Config::new().chan_len(Some(100000)).console().file_split(
+    fastlog::init(Config::new().chan_len(Some(100000)).console().file_split(
         "target/logs/",
         Rolling::new(RollingType::BySize(LogSize::KB(500))),
         KeepType::KeepNum(2),
@@ -167,8 +152,8 @@ fn main() {
 ##### Custom Log(impl do_log method)
 
 ```rust
-use fast_log::appender::{FastLogRecord, LogAppender};
-use fast_log::config::Config;
+use fastlog::appender::{FastLogRecord, LogAppender};
+use fastlog::config::Config;
 use fastdate::DateTime;
 use log::Level;
 
@@ -199,7 +184,7 @@ impl LogAppender for CustomLog {
 }
 
 fn main() {
-    fast_log::init(Config::new().custom(CustomLog {})).unwrap();
+    fastlog::init(Config::new().custom(CustomLog {})).unwrap();
     log::info!("Commencing yak shaving");
     log::error!("Commencing error");
     log::logger().flush();

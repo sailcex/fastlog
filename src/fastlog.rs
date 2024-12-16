@@ -8,7 +8,7 @@ use std::time::SystemTime;
 
 pub static LOGGER: OnceLock<Logger> = OnceLock::new();
 
-/// get Logger,but you must call `fast_log::init`
+/// get Logger,but you must call `fastlog::init`
 pub fn logger() -> &'static Logger {
     LOGGER.get_or_init(|| Logger::default())
 }
@@ -38,7 +38,7 @@ impl Logger {
 
     /// print no other info
     pub fn print(&self, log: String) -> Result<(), SendError<FastLogRecord>> {
-        let fast_log_record = FastLogRecord {
+        let fastlog_record = FastLogRecord {
             command: Command::CommandRecord,
             level: log::Level::Info,
             target: "".to_string(),
@@ -50,10 +50,10 @@ impl Logger {
             formated: log,
         };
         if let Some(send) = logger().send.get() {
-            send.send(fast_log_record)
+            send.send(fastlog_record)
         } else {
             // Ok(())
-            Err(crossbeam_channel::SendError(fast_log_record))
+            Err(crossbeam_channel::SendError(fastlog_record))
         }
     }
 
@@ -100,7 +100,7 @@ impl Log for Logger {
 
 pub fn init(config: Config) -> Result<&'static Logger, LogError> {
     if config.appends.is_empty() {
-        return Err(LogError::from("[fast_log] appends can not be empty!"));
+        return Err(LogError::from("[fastlog] appends can not be empty!"));
     }
     let (s, r) = chan(config.chan_len);
     logger()
@@ -228,7 +228,7 @@ pub fn init(config: Config) -> Result<&'static Logger, LogError> {
 }
 
 pub fn exit() -> Result<(), LogError> {
-    let fast_log_record = FastLogRecord {
+    let fastlog_record = FastLogRecord {
         command: Command::CommandExit,
         level: log::Level::Info,
         target: String::new(),
@@ -243,19 +243,19 @@ pub fn exit() -> Result<(), LogError> {
         .send
         .get()
         .ok_or_else(|| LogError::from("not init"))?
-        .send(fast_log_record);
+        .send(fastlog_record);
     match result {
         Ok(()) => {
             return Ok(());
         }
         _ => {}
     }
-    return Err(LogError::E("[fast_log] exit fail!".to_string()));
+    return Err(LogError::E("[fastlog] exit fail!".to_string()));
 }
 
 pub fn flush() -> Result<WaitGroup, LogError> {
     let wg = WaitGroup::new();
-    let fast_log_record = FastLogRecord {
+    let fastlog_record = FastLogRecord {
         command: Command::CommandFlush(wg.clone()),
         level: log::Level::Info,
         target: String::new(),
@@ -270,14 +270,14 @@ pub fn flush() -> Result<WaitGroup, LogError> {
         .send
         .get()
         .ok_or_else(|| LogError::from("not init"))?
-        .send(fast_log_record);
+        .send(fastlog_record);
     match result {
         Ok(()) => {
             return Ok(wg);
         }
         _ => {}
     }
-    return Err(LogError::E("[fast_log] flush fail!".to_string()));
+    return Err(LogError::E("[fastlog] flush fail!".to_string()));
 }
 
 pub fn print(log: String) -> Result<(), SendError<FastLogRecord>> {
