@@ -29,15 +29,23 @@ log data->    | main channel(crossbeam)  |   ->
 * no flush(chan_len=1000000) benches/log.rs
 
 ```bash
+# aws c7g.large (2C4G)
 $ cargo bench --bench log
-
+bench_log               time:   [935.11 ns 1.2231 µs 1.5810 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) high mild
+  4 (4.00%) high severe
 ```
 
 * all log flush into file(chan_len=1000000) benches/log_file.rs
 
 ```bash
+# aws c7g.large (2C4G)
 $ cargo bench --bench log_file
-
+bench_log_file          time:   [445.26 ns 614.35 ns 814.19 ns]
+Found 13 outliers among 100 measurements (13.00%)
+  5 (5.00%) high mild
+  8 (8.00%) high severe
 ```
 
 * how to use?

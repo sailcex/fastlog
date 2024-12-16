@@ -14,6 +14,8 @@ fn bench_log_file(c: &mut Criterion) {
         b.iter(|| {
             black_box(log::info!("Commencing yak shaving"));
         });
+
+        log::logger().flush();
     });
 }
 
