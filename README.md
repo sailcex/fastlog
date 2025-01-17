@@ -1,4 +1,4 @@
-[![Rust](https://github.com/helicex-rs/fastlog/actions/workflows/rust.yml/badge.svg)](https://github.com/helicex-rs/fastlog/actions/workflows/rust.yml)
+[![Rust](https://github.com/sailcex/fastlog/actions/workflows/rust.yml/badge.svg)](https://github.com/sailcex/fastlog/actions/workflows/rust.yml)
 
 # fastlog
 
@@ -6,7 +6,7 @@ A log implementation for extreme speed, using Crossbeam/channel ,once Batch writ
 architecture, appender per thread
 
 * High performance,Low overhead, logs auto merge, Full APPEND mode file writing
-* Built-in `ZIP`,`LZ4` compression
+* Built-in `gzip` compression
 * Support use ```log::logger().flush()``` method wait to flush disk
 * Support custom file(impl Trait)
 * Support rolling log(`ByDate`,`BySize`,`ByDuration`)
@@ -54,15 +54,15 @@ Found 13 outliers among 100 measurements (13.00%)
 
 ```toml
 log = "~0.4"
-fastlog = { git = "https://github.com/helicex-rs/fastlog.git", tag = "v1.7.6" }
+fastlog = { git = "https://github.com/sailcex/fastlog.git", tag = "v2.0.0" }
 ```
 
 or enable zip/lz4/gzip Compression library
 
 ```toml
 log = "~0.4"
-# "lz4","zip","gzip"
-fastlog = { git = "https://github.com/helicex-rs/fastlog.git", tag = "v1.7.6", features = ["lz4", "zip", "gzip"] }
+# "gzip"
+fastlog = { git = "https://github.com/sailcex/fastlog.git", tag = "v2.0.0", features = ["gzip"] }
 ```
 
 #### Performance optimization(important)

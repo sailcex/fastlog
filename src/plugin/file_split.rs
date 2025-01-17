@@ -12,8 +12,6 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, SystemTime};
 
-/// .zip or .lz4 or any one packer
-///
 /// must impl pack_name,is_allow,do_pack method
 pub trait Packer: Send + Sync {
     fn pack_name(&self) -> &'static str;
@@ -445,7 +443,7 @@ pub enum KeepType {
     /// // keep one day log pack
     /// (Duration::from_secs(24 * 3600))
     KeepTime(Duration),
-    /// keep log pack num(.log,.zip.lz4...more)
+    /// keep log pack num(.log,.gzip..more)
     KeepNum(i64),
 }
 
