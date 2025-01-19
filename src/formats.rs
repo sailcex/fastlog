@@ -26,12 +26,12 @@ impl RecordFormat for FastLogFormat {
                 let now = match self.time_type {
                     TimeType::Local => fastdate::DateTime::from(arg.now)
                         .set_offset(fastdate::offset_sec())
-                        .display_stand(),
-                    TimeType::Utc => fastdate::DateTime::from(arg.now).display_stand(),
+                        .display_stand_ms(),
+                    TimeType::Utc => fastdate::DateTime::from(arg.now).display_stand_ms(),
                 };
                 if arg.level.to_level_filter() <= self.display_line_level {
                     arg.formated = format!(
-                        "{} [{}] [{}:{}] {}\n",
+                        "{} {} [{}:{}] {}\n",
                         &now,
                         arg.level,
                         arg.file,
@@ -51,7 +51,7 @@ impl RecordFormat for FastLogFormat {
 impl FastLogFormat {
     pub fn new() -> FastLogFormat {
         Self {
-            display_line_level: LevelFilter::Warn,
+            display_line_level: LevelFilter::Info,
             time_type: TimeType::default(),
         }
     }
@@ -88,8 +88,8 @@ impl RecordFormat for FastLogFormatJson {
                 let now = match self.time_type {
                     TimeType::Local => fastdate::DateTime::from(arg.now)
                         .add_sub_sec(fastdate::offset_sec() as i64)
-                        .display_stand(),
-                    TimeType::Utc => fastdate::DateTime::from(arg.now).display_stand(),
+                        .display_stand_ms(),
+                    TimeType::Utc => fastdate::DateTime::from(arg.now).display_stand_ms(),
                 };
                 //{"args":"Commencing yak shaving","date":"2022-08-19 09:53:47.798674","file":"example/src/split_log.rs","level":"INFO","line":21}
                 let args = arg.args.replace("\"", "\\\"");
