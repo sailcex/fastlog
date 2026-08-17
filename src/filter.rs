@@ -30,7 +30,7 @@ impl Filter for ModuleFilter {
     fn do_log(&self, record: &log::Record) -> bool {
         let module = record.module_path().unwrap_or("");
         if !self.modules.is_empty() {
-            for x in &self.modules {
+            for x in self.modules.iter() {
                 if module == x {
                     return false;
                 }
