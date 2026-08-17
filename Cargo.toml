@@ -14,7 +14,7 @@ gzip = ["flate2"]
 runtime_thread = []
 
 [dependencies]
-fastdate = { git = "https://github.com/sailcex/fastdate.git", tag = "v1.0.1" }
+fastdate = { git = "https://github.com/sailcex/fastdate.git", tag = "v1.0.2" }
 log = { version = "~0.4", features = ["std"] }
 crossbeam-utils = "~0.8"
 crossbeam-channel = "~0.5"
